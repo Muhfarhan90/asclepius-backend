@@ -26,14 +26,15 @@ const predict = async (imageBuffer) => {
     .decodeImage(imageBuffer)
     .resizeNearestNeighbor([224, 224]) // Sesuaikan dengan input model
     .toFloat()
-    .expandDims(0)
-    .div(255.0);
+    .expandDims(0);
 
   // Lakukan prediksi
   const prediction = model.predict(imageTensor);
-  const predictionArray = prediction.arraySync();
- 
-  return predictionArray[0][0]; // Skalar prediksi (misal: 0.9)
+  // Tambahin code ini untuk mengambil score dan menghitung confidence score
+  const score = await prediction.data();
+  const confidenceScore = Math.max(...score) * 100;
+
+  return confidenceScore;
 };
 
 module.exports = { predict };
