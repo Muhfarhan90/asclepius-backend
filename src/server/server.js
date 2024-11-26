@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const predictRoutes = require("../routes/predictRoutes.js");
+require('dotenv').config();
 
 const app = express();
 

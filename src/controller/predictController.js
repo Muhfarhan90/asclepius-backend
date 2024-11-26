@@ -39,7 +39,7 @@ const predictCancer = async (req, res, next) => {
     // Menyimpan data ke Firestore
     await savePrediction(id,predictionData);
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: "success",
       message: "Model is predicted successfully",
       data: predictionData,

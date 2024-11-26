@@ -1,14 +1,14 @@
 const tf = require("@tensorflow/tfjs-node");
-const path = require("path");
+// const path = require("path");
 
-const modelPath = path.resolve(__dirname, "model.json");
+// const modelPath = path.resolve(__dirname, "model.json");
 let model = null;
 
 // Fungsi memuat model
 const loadModel = async () => {
   if (!model) {
     console.log("Loading model...");
-    model = await tf.loadGraphModel(`file://${modelPath}`);
+    model = await tf.loadGraphModel(process.env.MODEL_URL);
     console.log("Model loaded successfully");
   }
   return model;
