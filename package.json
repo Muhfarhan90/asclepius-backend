@@ -1,0 +1,22 @@
+{
+  "name": "asclepius-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/server/server.js",
+    "start": "node src/server/server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^4.22.0",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.7",
+    "path": "^0.12.7",
+    "uuid": "^11.0.3"
+  },
+  "type": "commonjs"
+}
