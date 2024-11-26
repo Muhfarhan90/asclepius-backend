@@ -2,8 +2,8 @@ const { Firestore } = require("@google-cloud/firestore");
 
 async function savePrediction(id, data) {
   const db = new Firestore({
-    projectId: "submissionmlgc-farhan-442717",
-    keyFilename: "src/service-accounts/firestore-serviceaccount.json",
+    projectId: process.env.PROJECT_ID,
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   });
 
   const predictCollection = db.collection("prediction");
