@@ -1,11 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
 const { predict } = require("../models/modelHandler.js");
+const { savePrediction } = require("../models/firestoreHandler.js");
 
 const predictCancer = async (req, res, next) => {
   try {
     const file = req.file;
 
-    // Pastikan file gambar ada
     if (!file) {
       return res.status(400).json({
         status: "fail",
@@ -13,37 +13,36 @@ const predictCancer = async (req, res, next) => {
       });
     }
 
-    // Ambil buffer gambar dari file yang di-upload
+    // Preprocessing gambar (opsional, bergantung pada model)
     const imageBuffer = file.buffer;
 
     // Lakukan prediksi menggunakan model
-    const confidenceScore = await predict(imageBuffer); // Mengambil confidence score
+    const confidenceScore = await predict(imageBuffer); // Hasil: confidence score
 
-    // Tentukan apakah gambar termasuk kanker atau tidak berdasarkan confidence score
-    const isCancer = confidenceScore > 50; // Ambil threshold 50% (0.5)
+    // Menentukan hasil prediksi berdasarkan threshold 50%
+    const isCancer = confidenceScore > 50; // Prediksi kanker jika confidence score > 50%
     const result = isCancer ? "Cancer" : "Non-cancer";
     const suggestion = isCancer
       ? "Segera periksa ke dokter!"
       : "Penyakit kanker tidak terdeteksi.";
 
-    // Generate ID unik untuk setiap prediksi
+    // Membuat ID dan menyimpan data
     const id = uuidv4();
+    const predictionData = {
+      id,
+      result,
+      suggestion,
+    //   confidenceScore,
+      createdAt: new Date().toISOString(),
+    };
 
-    // Tentukan className untuk frontend berdasarkan hasil prediksi
-    const className = isCancer ? "cancer-prediction" : "non-cancer-prediction";
+    // Menyimpan data ke Firestore
+    await savePrediction(id,predictionData);
 
-    // Kirim response dengan hasil prediksi
-    return res.status(201).json({
+    return res.status(200).json({
       status: "success",
       message: "Model is predicted successfully",
-      data: {
-        id,
-        result,
-        confidenceScore,  // Sertakan confidence score di response
-        suggestion,
-        className, // Menambahkan className di response
-        createdAt: new Date().toISOString(),
-      },
+      data: predictionData,
     });
   } catch (error) {
     console.error("Prediction Error:", error.message);
